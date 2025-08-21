@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        IMAGE_NAME = "your-dockerhub-username/springboot-app"
+        IMAGE_NAME = "bxctt/springboot-app"
         TAG = "latest"
     }
     stages {
