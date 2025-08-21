@@ -13,26 +13,26 @@ pipeline {
 
         stage('Build Jar') {
             steps {
-                sh './mvnw clean package -DskipTests'
+                bat './mvnw clean package -DskipTests'
             }
         }
 
         stage('Docker Build') {
             steps {
-                sh 'docker build -t ${IMAGE_NAME}:${TAG} .'
+                bat 'docker build -t ${IMAGE_NAME}:${TAG} .'
             }
         }
 
         stage('Docker Push') {
             steps {
-                sh 'docker push bxctt/demo-app:latest .'
+                bat 'docker push bxctt/demo-app:latest .'
             }
         }
 
 
         stage('Deploy to K8s') {
             steps {
-                sh '''
+                bat '''
                 sed "s|your-dockerhub-username/springboot-app:latest|${IMAGE_NAME}:${TAG}|" k8s/deployment.yaml | kubectl apply -f -
                 kubectl apply -f k8s/services/service.yaml
                 '''
