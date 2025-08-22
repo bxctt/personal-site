@@ -3,6 +3,7 @@ pipeline {
     environment {
         IMAGE_NAME = "bxctt/springboot-app"
         TAG = "latest"
+        DOCKERHUB_CREDENTIALS = credentials('docker-hub-cred-id')
     }
     stages {
         stage('Checkout') {
@@ -23,17 +24,20 @@ pipeline {
             }
         }
 
-        stage('Docker Push') {
+        stage('Docker Login') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-hub-cred-id', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    bat '''
-                        docker login -u $DOCKER_USER -p $DOCKER_PASS
-                        docker push bxctt/springboot-app:latest
-                        '''
-                }
+                    bat 'docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin'
+
             }
         }
 
+        stage('Docker Push') {
+            steps {
+                    bat 'docker push bxctt/springboot-app:latest'
+
+            }
+        }
+        
         stage('Deploy to K8s') {
             steps {
                 bat '''
