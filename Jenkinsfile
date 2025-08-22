@@ -25,7 +25,7 @@ pipeline {
 
         stage('Docker Push') {
             steps {
-                bat 'docker push bxctt/demo-app:latest'
+                bat 'docker push bxctt/springboot-app:latest'
             }
         }
 
