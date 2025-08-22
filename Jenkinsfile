@@ -19,7 +19,7 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                bat 'docker build -t ${IMAGE_NAME}:${TAG} .'
+                bat 'docker build -t %IMAGE_NAME%:%TAG% .'
             }
         }
 
@@ -33,7 +33,7 @@ pipeline {
         stage('Deploy to K8s') {
             steps {
                 bat '''
-                sed "s|your-dockerhub-username/springboot-app:latest|${IMAGE_NAME}:${TAG}|" k8s/deployment.yaml | kubectl apply -f -
+                sed "s|your-dockerhub-username/springboot-app:latest|%IMAGE_NAME%:%TAG%|" k8s/deployment.yaml | kubectl apply -f -
                 kubectl apply -f k8s/services/service.yaml
                 '''
             }
