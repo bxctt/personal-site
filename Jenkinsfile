@@ -26,8 +26,15 @@ pipeline {
 
         stage('Docker Login') {
             steps {
-                    bat 'docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin'
-
+                withCredentials([usernamePassword(
+                    credentialsId: 'docker-hub-cred-id', // 你在 Jenkins 中配置的 Docker Hub 凭据 ID
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                    )]) {
+                        bat '''
+                            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        '''
+                    }
             }
         }
 
